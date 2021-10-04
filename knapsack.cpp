@@ -1,54 +1,44 @@
-#include<iostream>
+#include <bits/stdc++.h>
+
 using namespace std;
+
+#define vi vector<int>
+#define pii pair<int,int>
+#define vii vector<pii>
+#define rep(i,a,b) for(int i=a;i<b;i++)
+#define ff first
+#define ss second
+
+
+bool compare(pii p1, pii p2){
+    double v1 = (double) p1.ff/p1.ss;
+    double v2 = (double) p2.ff/p2.ss;
+    
+    return v1>v2;
+}
 int main()
 {
-    int array[2][100], n, w, i, curw, used[100], maxi = -1, totalprofit = 0;
-    cout << "Enter number of objects: ";
-    cin >> n;
-    cout << "Enter the weight of the knapsack: ";
-    cin >> w;
-    for (i = 0; i < n; i++)
-    {
-        cin >> array[0][i] >> array[1][i];
+    int n;cin>>n;
+    vii a(n);
+    rep(i,0,n){
+        cin>>a[i].ff>>a[i].ss;
     }
-    for (i = 0; i < n; i++)
-    {
-        used[i] = 0;
+    int w;cin>>w;
+    sort(a.begin(),a.end(),compare);
+    
+    int ans=0;
+    rep(i,0,n){
+        if(w >= a[i].ss)
+        {
+            ans += a[i].ff;
+            w -= a[i].ss;
+            continue;
+        }
+        double vw = (double) a[i].ff/a[i].ss;
+        ans += vw*w;
+        break;
     }
-    curw = w;
-    while (curw >= 0)
-    {
-        maxi = -1;
-        for (i = 0; i < n; i++)
-        {
-            if ((used[i] == 0) && ((maxi == -1) || (((float) array[1][i]
-                    / (float) array[0][i]) > ((float) array[1][maxi]
-                    / (float) array[0][maxi]))))
-            {
-                maxi = i;
-            }
-        }
-        used[maxi] = 1;
-        curw -= array[0][maxi];
-        totalprofit += array[1][maxi];
-        if (curw >= 0)
-        {
-            cout << "\nAdded object " << maxi + 1 << " Weight: "
-                    << array[0][maxi] << " Profit: " << array[1][maxi]
-                    << " completely in the bag, Space left: " << curw;
-        }
-        else
-        {
-            cout << "\nAdded object " << maxi + 1 << " Weight: "
-                    << (array[0][maxi] + curw) << " Profit: "
-                    << (array[1][maxi] / array[0][maxi]) * (array[0][maxi]
-                            + curw) << " partially in the bag, Space left: 0"
-                    << " Weight added is: " << curw + array[0][maxi];
-            totalprofit -= array[1][maxi];
-            totalprofit += ((array[1][maxi] / array[0][maxi]) * (array[0][maxi]
-                    + curw));
-        }
-    }
-    cout << "\nBags filled with objects worth: " << totalprofit;
+    cout<<ans<<endl;
+
     return 0;
 }
